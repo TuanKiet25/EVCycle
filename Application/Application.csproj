@@ -10,7 +10,6 @@
     <Folder Include="IServices\" />
     <Folder Include="Services\" />
     <Folder Include="ViewModels\Requests\" />
-    <Folder Include="ViewModels\Responses\" />
   </ItemGroup>
 
   <ItemGroup>
