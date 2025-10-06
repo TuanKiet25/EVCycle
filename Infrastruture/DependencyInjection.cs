@@ -15,11 +15,11 @@ namespace Infrastructure
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            // Đăng ký AppDbContext (PostgreSQL)
+            // Đăng ký AppDbContext (SQL)
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(
-                    configuration.GetConnectionString("Local"),
+                    configuration.GetConnectionString("DefaultConnection"),
                     sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
             });
             // Đăng ký repositiries
