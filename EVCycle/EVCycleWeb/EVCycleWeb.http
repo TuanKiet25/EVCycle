@@ -1,0 +1,6 @@
+@EVCycleWeb_HostAddress = http://localhost:5004
+
+GET {{EVCycleWeb_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
