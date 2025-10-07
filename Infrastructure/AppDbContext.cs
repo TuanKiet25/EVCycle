@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,10 @@ namespace Infrastructure
             : base(options)
         {
         }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Listing> Listings { get; set; }
+        public virtual DbSet<Vehicle> Vehicles { get; set; }    
+        public virtual DbSet<Battery> Batteries { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Application.ViewModels.Requests;
+using AutoMapper;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,12 @@ namespace Infrastructure.AutoMapperConfigurations
         {
             // Add your mappings here
             // CreateMap<Source, Destination>();
+            CreateMap<RegisterRequestViewModel, User>()
+               .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+               .ForMember(dest => dest.Role, opt => opt.Ignore())
+               .ForMember(dest => dest.IsVerified, opt => opt.Ignore())
+               .ForMember(dest => dest.VerificationOtp, opt => opt.Ignore())
+               .ForMember(dest => dest.OtpExpiryTime, opt => opt.Ignore());
         }
     }
 }

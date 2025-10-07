@@ -12,7 +12,7 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -24,6 +24,9 @@ namespace Infrastructure.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Imgs = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false),
+                    VerificationOtp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtpExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Role = table.Column<int>(type: "int", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -31,11 +34,11 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Listing",
+                name: "Listings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -52,17 +55,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Listing", x => x.Id);
+                    table.PrimaryKey("PK_Listings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Listing_User_UserId",
+                        name: "FK_Listings_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Battery",
+                name: "Batteries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -79,17 +82,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Battery", x => x.Id);
+                    table.PrimaryKey("PK_Batteries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Battery_Listing_ListingId",
+                        name: "FK_Batteries_Listings_ListingId",
                         column: x => x.ListingId,
-                        principalTable: "Listing",
+                        principalTable: "Listings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Vehicle",
+                name: "Vehicles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -109,28 +112,28 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Vehicle", x => x.Id);
+                    table.PrimaryKey("PK_Vehicles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Vehicle_Listing_ListingId",
+                        name: "FK_Vehicles_Listings_ListingId",
                         column: x => x.ListingId,
-                        principalTable: "Listing",
+                        principalTable: "Listings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Battery_ListingId",
-                table: "Battery",
+                name: "IX_Batteries_ListingId",
+                table: "Batteries",
                 column: "ListingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Listing_UserId",
-                table: "Listing",
+                name: "IX_Listings_UserId",
+                table: "Listings",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vehicle_ListingId",
-                table: "Vehicle",
+                name: "IX_Vehicles_ListingId",
+                table: "Vehicles",
                 column: "ListingId");
         }
 
@@ -138,16 +141,16 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Battery");
+                name: "Batteries");
 
             migrationBuilder.DropTable(
-                name: "Vehicle");
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
-                name: "Listing");
+                name: "Listings");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
         }
     }
 }

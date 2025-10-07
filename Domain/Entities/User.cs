@@ -17,6 +17,9 @@ namespace Domain.Entities
         public string? PhoneNumber { get; set; }
         public bool IsActive { get; set; }
         public string? Imgs { get; set; }
+        public bool IsVerified { get; set; } = false; 
+        public string? VerificationOtp { get; set; } 
+        public DateTime? OtpExpiryTime { get; set; } 
         public Role Role { get; set; } 
         public ICollection<Listing>? Listings { get; set; }
 
