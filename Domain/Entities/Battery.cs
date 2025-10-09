@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,13 @@ namespace Domain.Entities
     public class Battery : BaseEntity
     {
         public string? Brand { get; set; }
+        public string? Model { get; set; }
         public double Capacity { get; set; } 
         public int health { get; set; }
         public string? Voltage { get; set; }
-        public string? CompatibleVehicles { get; set; }
-        public string? Imgs { get; set; }
+        public Chemistry Chemistry { get; set; }
         public Guid ListingId { get; set; }
         public Listing? Listing { get; set; }
+        public ICollection<BatteryCompatibility>? BatteryCompatibilities { get; set; }
     }
 }

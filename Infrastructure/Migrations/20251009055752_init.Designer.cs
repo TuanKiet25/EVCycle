@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251007131752_init")]
+    [Migration("20251009055752_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -37,17 +37,17 @@ namespace Infrastructure.Migrations
                     b.Property<double>("Capacity")
                         .HasColumnType("float");
 
-                    b.Property<string>("CompatibleVehicles")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Chemistry")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Imgs")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("ListingId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
@@ -68,6 +68,36 @@ namespace Infrastructure.Migrations
                     b.ToTable("Batteries");
                 });
 
+            modelBuilder.Entity("Domain.Entities.BatteryCompatibility", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BatteryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatteryId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("BatteryCompatibility");
+                });
+
             modelBuilder.Entity("Domain.Entities.Listing", b =>
                 {
                     b.Property<Guid>("Id")
@@ -81,6 +111,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imgs")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ItemType")
@@ -185,8 +218,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Imgs")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EndYear")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("ListingId")
                         .HasColumnType("uniqueidentifier");
@@ -197,14 +230,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Odometer")
                         .HasColumnType("int");
 
+                    b.Property<int>("StartYear")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("VIN")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -230,6 +263,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("Listing");
                 });
 
+            modelBuilder.Entity("Domain.Entities.BatteryCompatibility", b =>
+                {
+                    b.HasOne("Domain.Entities.Battery", "Battery")
+                        .WithMany("BatteryCompatibilities")
+                        .HasForeignKey("BatteryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Vehicle", "Vehicle")
+                        .WithMany("BatteryCompatibilities")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Battery");
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("Domain.Entities.Listing", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
@@ -252,6 +304,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Listing");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Battery", b =>
+                {
+                    b.Navigation("BatteryCompatibilities");
+                });
+
             modelBuilder.Entity("Domain.Entities.Listing", b =>
                 {
                     b.Navigation("Batteries");
@@ -262,6 +319,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Navigation("Listings");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Vehicle", b =>
+                {
+                    b.Navigation("BatteryCompatibilities");
                 });
 #pragma warning restore 612, 618
         }

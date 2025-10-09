@@ -48,6 +48,7 @@ namespace Infrastructure.Migrations
                     SuggestedPrice = table.Column<double>(type: "float", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ItemType = table.Column<int>(type: "int", nullable: false),
+                    Imgs = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -70,11 +71,11 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Brand = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Model = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacity = table.Column<double>(type: "float", nullable: false),
                     health = table.Column<int>(type: "int", nullable: false),
                     Voltage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompatibleVehicles = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Imgs = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Chemistry = table.Column<int>(type: "int", nullable: false),
                     ListingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -98,13 +99,13 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Brand = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Year = table.Column<int>(type: "int", nullable: false),
+                    StartYear = table.Column<int>(type: "int", nullable: false),
+                    EndYear = table.Column<int>(type: "int", nullable: false),
                     Odometer = table.Column<int>(type: "int", nullable: false),
                     BatteryHealth = table.Column<int>(type: "int", nullable: false),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VIN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     licensePlate = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Imgs = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ListingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -121,10 +122,48 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "BatteryCompatibility",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BatteryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VehicleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BatteryCompatibility", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BatteryCompatibility_Batteries_BatteryId",
+                        column: x => x.BatteryId,
+                        principalTable: "Batteries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BatteryCompatibility_Vehicles_VehicleId",
+                        column: x => x.VehicleId,
+                        principalTable: "Vehicles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Batteries_ListingId",
                 table: "Batteries",
                 column: "ListingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BatteryCompatibility_BatteryId",
+                table: "BatteryCompatibility",
+                column: "BatteryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BatteryCompatibility_VehicleId",
+                table: "BatteryCompatibility",
+                column: "VehicleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Listings_UserId",
@@ -140,6 +179,9 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "BatteryCompatibility");
+
             migrationBuilder.DropTable(
                 name: "Batteries");
 
