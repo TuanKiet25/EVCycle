@@ -40,6 +40,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAproved")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("ListingId")
                         .HasColumnType("uniqueidentifier");
 
@@ -217,6 +220,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("EndYear")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsAproved")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("ListingId")
                         .HasColumnType("uniqueidentifier");

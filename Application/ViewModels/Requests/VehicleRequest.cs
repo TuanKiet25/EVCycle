@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.ViewModels.Requests
 {
-    public class Vehicle : BaseEntity
+    public class VehicleRequest
     {
         public string? Brand { get; set; }
         public string? Model { get; set; }
@@ -17,9 +17,5 @@ namespace Domain.Entities
         public string? Color { get; set; }
         public string? VIN { get; set; }
         public string? licensePlate { get; set; }
-        public bool IsAproved { get; set; } = false;
-        public Guid ListingId { get; set; }
-        public Listing? Listing { get; set; }
-        public ICollection<BatteryCompatibility>? BatteryCompatibilities { get; set; }
     }
 }
