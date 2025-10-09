@@ -10,6 +10,8 @@ namespace Application
     public interface IUnitOfWork
     {
         IUserRepository userRepository { get; }
+        IBatteryRepository batteryRepository { get; }
+        IVehicleRepository vehicleRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }
