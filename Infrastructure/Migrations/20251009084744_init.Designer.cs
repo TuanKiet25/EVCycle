@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251009055752_init")]
+    [Migration("20251009084744_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -42,6 +42,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAproved")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("ListingId")
                         .HasColumnType("uniqueidentifier");
@@ -220,6 +223,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("EndYear")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsAproved")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("ListingId")
                         .HasColumnType("uniqueidentifier");

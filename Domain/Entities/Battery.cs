@@ -14,6 +14,7 @@ namespace Domain.Entities
         public double Capacity { get; set; } 
         public int health { get; set; }
         public string? Voltage { get; set; }
+        public bool IsAproved { get; set; } = false;
         public Chemistry Chemistry { get; set; }
         public Guid ListingId { get; set; }
         public Listing? Listing { get; set; }
