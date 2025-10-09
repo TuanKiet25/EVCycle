@@ -15,6 +15,7 @@ namespace Domain.Entities
         public double SuggestedPrice { get; set; }
         public string? Address { get; set; }
         public ItemType ItemType { get; set; }
+        public string? Imgs { get; set; }
         public Guid UserId { get; set; }  
         public User? User { get; set; }
         public ICollection<Battery>? Batteries { get; set; }

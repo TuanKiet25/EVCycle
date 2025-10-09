@@ -10,14 +10,15 @@ namespace Domain.Entities
     {
         public string? Brand { get; set; }
         public string? Model { get; set; }
-        public int Year { get; set; }
+        public int StartYear { get; set; }
+        public int EndYear { get; set; }
         public int Odometer { get; set; }
         public int BatteryHealth { get; set; }
         public string? Color { get; set; }
         public string? VIN { get; set; }
         public string? licensePlate { get; set; }
-        public string? Imgs { get; set; }
         public Guid ListingId { get; set; }
         public Listing? Listing { get; set; }
+        public ICollection<BatteryCompatibility>? BatteryCompatibilities { get; set; }
     }
 }
