@@ -35,6 +35,8 @@ namespace Infrastructure
             #region Repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IBatteryRepository, BatteryRepository>();
             #endregion
             // Đăng ký services
             #region services
