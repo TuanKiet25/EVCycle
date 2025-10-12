@@ -24,6 +24,7 @@ namespace Infrastructure
         public virtual DbSet<Listing> Listings { get; set; }
         public virtual DbSet<Vehicle> Vehicles { get; set; }    
         public virtual DbSet<Battery> Batteries { get; set; }
+        public virtual DbSet<BatteryCompatibility> BatteryCompatibilities { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

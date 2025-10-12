@@ -12,11 +12,11 @@ namespace Domain.Entities
         public string? Brand { get; set; }
         public string? Model { get; set; }
         public double Capacity { get; set; } 
-        public int health { get; set; }
+        public int Health { get; set; }
         public string? Voltage { get; set; }
         public bool IsAproved { get; set; } = false;
         public Chemistry Chemistry { get; set; }
-        public Guid ListingId { get; set; }
+        public Guid? ListingId { get; set; }
         public Listing? Listing { get; set; }
         public ICollection<BatteryCompatibility>? BatteryCompatibilities { get; set; }
     }
