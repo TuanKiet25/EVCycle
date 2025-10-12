@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251009084744_init")]
+    [Migration("20251012153819_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -43,10 +43,13 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Health")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsAproved")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("ListingId")
+                    b.Property<Guid?>("ListingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Model")
@@ -57,9 +60,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Voltage")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("health")
-                        .HasColumnType("int");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -98,7 +98,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("BatteryCompatibility");
+                    b.ToTable("BatteryCompatibilities");
                 });
 
             modelBuilder.Entity("Domain.Entities.Listing", b =>
@@ -227,7 +227,7 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsAproved")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("ListingId")
+                    b.Property<Guid?>("ListingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Model")
@@ -263,8 +263,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Listing", "Listing")
                         .WithMany("Batteries")
                         .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Listing");
                 });
@@ -304,8 +303,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Listing", "Listing")
                         .WithMany("Vehicles")
                         .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Listing");
                 });

@@ -43,6 +43,8 @@ namespace Infrastructure
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IBatteryService, BatteryService>();
             #endregion
             // Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

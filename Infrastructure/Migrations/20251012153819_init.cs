@@ -73,11 +73,11 @@ namespace Infrastructure.Migrations
                     Brand = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacity = table.Column<double>(type: "float", nullable: false),
-                    health = table.Column<int>(type: "int", nullable: false),
+                    Health = table.Column<int>(type: "int", nullable: false),
                     Voltage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsAproved = table.Column<bool>(type: "bit", nullable: false),
                     Chemistry = table.Column<int>(type: "int", nullable: false),
-                    ListingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ListingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -108,7 +108,7 @@ namespace Infrastructure.Migrations
                     VIN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     licensePlate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsAproved = table.Column<bool>(type: "bit", nullable: false),
-                    ListingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ListingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -125,7 +125,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BatteryCompatibility",
+                name: "BatteryCompatibilities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -137,15 +137,15 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BatteryCompatibility", x => x.Id);
+                    table.PrimaryKey("PK_BatteryCompatibilities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BatteryCompatibility_Batteries_BatteryId",
+                        name: "FK_BatteryCompatibilities_Batteries_BatteryId",
                         column: x => x.BatteryId,
                         principalTable: "Batteries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_BatteryCompatibility_Vehicles_VehicleId",
+                        name: "FK_BatteryCompatibilities_Vehicles_VehicleId",
                         column: x => x.VehicleId,
                         principalTable: "Vehicles",
                         principalColumn: "Id",
@@ -158,13 +158,13 @@ namespace Infrastructure.Migrations
                 column: "ListingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BatteryCompatibility_BatteryId",
-                table: "BatteryCompatibility",
+                name: "IX_BatteryCompatibilities_BatteryId",
+                table: "BatteryCompatibilities",
                 column: "BatteryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BatteryCompatibility_VehicleId",
-                table: "BatteryCompatibility",
+                name: "IX_BatteryCompatibilities_VehicleId",
+                table: "BatteryCompatibilities",
                 column: "VehicleId");
 
             migrationBuilder.CreateIndex(
@@ -182,7 +182,7 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BatteryCompatibility");
+                name: "BatteryCompatibilities");
 
             migrationBuilder.DropTable(
                 name: "Batteries");
