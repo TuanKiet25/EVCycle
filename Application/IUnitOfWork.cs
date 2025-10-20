@@ -12,6 +12,7 @@ namespace Application
         IUserRepository userRepository { get; }
         IBatteryRepository batteryRepository { get; }
         IVehicleRepository vehicleRepository { get; }
+        IListingRepository listingRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }

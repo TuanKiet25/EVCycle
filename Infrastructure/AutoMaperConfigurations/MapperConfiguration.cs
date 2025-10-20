@@ -25,7 +25,8 @@ namespace Infrastructure.AutoMapperConfigurations
             CreateMap<BatteryRequest, Battery>().ReverseMap();
             CreateMap<Battery,BatteryResponse>().ReverseMap();
             CreateMap<VehicleRequest, Vehicle>().ReverseMap();
-
+            CreateMap<ListingRequest, Listing>().ReverseMap();
+            CreateMap<Listing, ListingResponse>().ReverseMap();
         }
     }
 }

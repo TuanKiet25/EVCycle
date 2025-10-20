@@ -37,6 +37,7 @@ namespace Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IBatteryRepository, BatteryRepository>();
+            services.AddScoped<IListingRepository, ListingRepository>();
             #endregion
             // Đăng ký services
             #region services
@@ -45,6 +46,7 @@ namespace Infrastructure
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IBatteryService, BatteryService>();
+            services.AddScoped<IListingService, ListingService>();
             #endregion
             // Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
