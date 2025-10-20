@@ -52,7 +52,7 @@ namespace Infrastructure
             var jwtSettings = new JwtSettings();
             configuration.Bind(JwtSettings.SectionName, jwtSettings);
             services.AddSingleton(jwtSettings); // Dùng AddSingleton vì cài đặt không thay đổi
-            // 2. Cấu hình dịch vụ Authentication của .NET Core
+            // Cấu hình dịch vụ Authentication của .NET Core
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -74,6 +74,19 @@ namespace Infrastructure
             });
             // Đăng ký MailSettings
             services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+            // Đăng ký CORS
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      // Cho phép origin của frontend được truy cập
+                                      policy.WithOrigins("http://localhost:8080")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                                  });
+            });
             return services;
         }
     }
