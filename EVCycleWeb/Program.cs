@@ -1,5 +1,6 @@
 ﻿using Infrastructure;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
