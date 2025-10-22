@@ -1,5 +1,6 @@
 ﻿using Infrastructure;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +52,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("_myAllowSpecificOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();

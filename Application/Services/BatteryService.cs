@@ -53,7 +53,7 @@ namespace Application.Services
                 }
                 battery.IsAproved = true;
                 await _unitOfWork.SaveChangesAsync();
-                return response.SetOk($"Battery {battery.Brand} approved successfully");
+                return response.SetOk($"Battery {battery.Model} approved successfully");
             }
             catch(Exception ex)
             {
@@ -72,10 +72,10 @@ namespace Application.Services
                 }
                 foreach (var batteryRequest in batteryRequests)
                 {
-                    var checkBrand = await _unitOfWork.batteryRepository.GetAsync(b => b.Brand.ToLower() == batteryRequest.Brand.ToLower() && !b.isDeleted);
+                    var checkBrand = await _unitOfWork.batteryRepository.GetAsync(b => b.Model.ToLower() == batteryRequest.Model.ToLower() && !b.isDeleted);
                     if (checkBrand != null)
                     {
-                        return response.SetBadRequest(null, $"Battery with brand {batteryRequest.Brand} already exists");
+                        return response.SetBadRequest(null, $"Battery with Model {batteryRequest.Model} already exists");
                     }
                     var battery = _mapper.Map<Battery>(batteryRequest);
                     await _unitOfWork.batteryRepository.AddAsync(battery);
@@ -101,7 +101,7 @@ namespace Application.Services
                 }
                 battery.isDeleted = true;
                 await _unitOfWork.SaveChangesAsync();
-                return response.SetOk($"Battery {battery.Brand} deleted successfully");
+                return response.SetOk($"Battery {battery.Model} deleted successfully");
             }
             catch (Exception ex)
             {
@@ -161,14 +161,14 @@ namespace Application.Services
                 {
                     return response.SetBadRequest(null, "Approved battery cannot be updated");
                 }
-                var checkBrand = await _unitOfWork.batteryRepository.GetAsync(b => b.Brand.ToLower() == batteryRequest.Brand.ToLower() && !b.isDeleted);
+                var checkBrand = await _unitOfWork.batteryRepository.GetAsync(b => b.Model.ToLower() == batteryRequest.Model.ToLower() && !b.isDeleted);
                 if (checkBrand != null)
                 {
-                    return response.SetBadRequest(null, "Battery with the same brand already exists");
+                    return response.SetBadRequest(null, "Battery with the same model already exists");
                 }
                 _mapper.Map(batteryRequest, battery);
                 await _unitOfWork.SaveChangesAsync();
-                return response.SetOk($"Battery {battery.Brand} updated successfully");
+                return response.SetOk($"Battery {battery.Model} updated successfully");
             }
             catch (Exception ex)
             {
