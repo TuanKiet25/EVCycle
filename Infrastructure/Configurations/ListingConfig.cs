@@ -14,14 +14,14 @@ namespace Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<Listing> builder)
         {
             builder.HasKey(l => l.Id);
-            builder.HasMany(l => l.Vehicles)
-                   .WithOne(v => v.Listing)
-                   .HasForeignKey(v => v.ListingId)
-                   .OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(l => l.Batteries)
-                     .WithOne(b => b.Listing)
-                     .HasForeignKey(b => b.ListingId)
-                     .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(l => l.Vehicle)
+                     .WithMany(v => v.Listings)
+                     .HasForeignKey(l => l.VehicleId)
+                     .OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(l => l.Battery)
+                        .WithMany(b => b.Listings)
+                        .HasForeignKey(l => l.BatteryId)
+                        .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

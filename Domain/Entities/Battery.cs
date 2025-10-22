@@ -16,8 +16,7 @@ namespace Domain.Entities
         public string? Voltage { get; set; }
         public bool IsAproved { get; set; } = false;
         public Chemistry Chemistry { get; set; }
-        public Guid? ListingId { get; set; }
-        public Listing? Listing { get; set; }
+        public ICollection<Listing>? Listings { get; set; }
         public ICollection<BatteryCompatibility>? BatteryCompatibilities { get; set; }
     }
 }

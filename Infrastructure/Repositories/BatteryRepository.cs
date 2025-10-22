@@ -13,5 +13,10 @@ namespace Infrastructure.Repositories
         public BatteryRepository(AppDbContext context) : base(context)
         {
         }
+
+        public Task<List<Battery>> GetTrendingBatteriesAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

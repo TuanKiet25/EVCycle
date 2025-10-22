@@ -9,5 +9,6 @@ namespace Application.IRepositories
 {
     public interface IBatteryRepository : IGenericRepository<Battery>
     {
+        Task<List<Battery>> GetTrendingBatteriesAsync();
     }
 }
