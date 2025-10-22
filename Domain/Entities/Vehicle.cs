@@ -18,8 +18,7 @@ namespace Domain.Entities
         public string? VIN { get; set; }
         public string? licensePlate { get; set; }
         public bool IsAproved { get; set; } = false;
-        public Guid? ListingId { get; set; }
-        public Listing? Listing { get; set; }
+        public ICollection<Listing>? Listings { get; set; }
         public ICollection<BatteryCompatibility>? BatteryCompatibilities { get; set; }
     }
 }

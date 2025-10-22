@@ -46,9 +46,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsAproved")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("ListingId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
 
@@ -62,8 +59,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ListingId");
 
                     b.ToTable("Batteries");
                 });
@@ -107,6 +102,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("BatteryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
@@ -134,12 +132,19 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("VehicleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BatteryId");
+
                     b.HasIndex("UserId");
+
+                    b.HasIndex("VehicleId");
 
                     b.ToTable("Listings");
                 });
@@ -224,9 +229,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsAproved")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("ListingId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
 
@@ -250,19 +252,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ListingId");
-
                     b.ToTable("Vehicles");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Battery", b =>
-                {
-                    b.HasOne("Domain.Entities.Listing", "Listing")
-                        .WithMany("Batteries")
-                        .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Listing");
                 });
 
             modelBuilder.Entity("Domain.Entities.BatteryCompatibility", b =>
@@ -286,35 +276,34 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Listing", b =>
                 {
+                    b.HasOne("Domain.Entities.Battery", "Battery")
+                        .WithMany("Listings")
+                        .HasForeignKey("BatteryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("Listings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Vehicle", "Vehicle")
+                        .WithMany("Listings")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Battery");
+
                     b.Navigation("User");
-                });
 
-            modelBuilder.Entity("Domain.Entities.Vehicle", b =>
-                {
-                    b.HasOne("Domain.Entities.Listing", "Listing")
-                        .WithMany("Vehicles")
-                        .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Listing");
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("Domain.Entities.Battery", b =>
                 {
                     b.Navigation("BatteryCompatibilities");
-                });
 
-            modelBuilder.Entity("Domain.Entities.Listing", b =>
-                {
-                    b.Navigation("Batteries");
-
-                    b.Navigation("Vehicles");
+                    b.Navigation("Listings");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -325,6 +314,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Vehicle", b =>
                 {
                     b.Navigation("BatteryCompatibilities");
+
+                    b.Navigation("Listings");
                 });
 #pragma warning restore 612, 618
         }
