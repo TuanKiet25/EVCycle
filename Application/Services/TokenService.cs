@@ -32,7 +32,7 @@ namespace Application.Services
                 new Claim("UserId", user.Id.ToString()), // Thêm claim tùy chỉnh
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
-
+            
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],

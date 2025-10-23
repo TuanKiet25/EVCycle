@@ -12,10 +12,10 @@ namespace Application.IServices
 {
     public interface IListingService
     {
-        Task<APIResponse> CreateListingAsync(ListingRequest newListing, ItemType itemType);
+        Task<APIResponse> CreateListingAsync(ListingRequest newListing, ItemType itemType, Guid userId);
         Task<APIResponse> GetAllListingsAsync(Guid UserId);
         Task<APIResponse> GetListingByIdAsync(Guid listingId);
-        Task<APIResponse> UpdateListingAsync(ListingRequest updatedListing, Guid listingId);
+        Task<APIResponse> UpdateListingAsync(ListingRequest updatedListing, Guid listingId, ItemType itemType);
         Task<APIResponse> DeleteListingAsync(Guid listingId);
     }
 }

@@ -4,10 +4,12 @@ using Application.ViewModels.Responses;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,7 +28,7 @@ namespace Application.Services
             _response = new APIResponse();
         }
 
-        public async Task<APIResponse> CreateListingAsync(ListingRequest newListing, ItemType itemType)
+        public async Task<APIResponse> CreateListingAsync(ListingRequest newListing, ItemType itemType, Guid userId)
         {
             try
             {
@@ -35,11 +37,27 @@ namespace Application.Services
                     return _response.SetBadRequest(null, "Listing data is null.");
                 }
                 var listing = _mapper.Map<Listing>(newListing);
+                if(itemType == ItemType.Battery)
+                {
+                    listing.BatteryId = newListing.BatteryId;
+                    listing.VehicleId = null;
+                }
+                else if(itemType == ItemType.Vehicle)
+                {
+                    listing.VehicleId = newListing.VehicleId;
+                    listing.BatteryId = null;
+                }
+                else if(itemType == ItemType.FullSet)
+                {
+                    listing.VehicleId = newListing.VehicleId;
+                    listing.BatteryId = newListing.BatteryId;
+                }
+                listing.UserId = userId;
                 listing.ItemType = itemType;
                 await _unitOfWork.listingRepository.AddAsync(listing);
                 if(await _unitOfWork.SaveChangesAsync() > 0)
                 {
-                    return _response.SetOk(newListing);
+                    return _response.SetOk(listing);
                 }
                 else
                 {
@@ -87,12 +105,13 @@ namespace Application.Services
                 {
                     return _response.SetBadRequest(null, "Can not find User");
                 }
-                var list = await _unitOfWork.listingRepository.GetAllAsync(
+                var rawList = await _unitOfWork.listingRepository.GetAllAsync(
                     filter: l => l.UserId == UserId && l.isDeleted == false,
                     include: i => i
                         .Include(l => l.Battery)
                         .Include(l => l.Vehicle)
                     );
+                var list = rawList.OrderByDescending(l => l.UpdateTime).ToList();
                 List<ListingResponse> listingResponse = new List<ListingResponse>();
                 var listListings = _mapper.Map(list, listingResponse);
                 if (listListings == null || !listListings.Any())
@@ -128,7 +147,7 @@ namespace Application.Services
             }
         }
 
-        public async Task<APIResponse> UpdateListingAsync(ListingRequest updatedListing, Guid listingId)
+        public async Task<APIResponse> UpdateListingAsync(ListingRequest updatedListing, Guid listingId, ItemType itemType)
         {
             try
             {
@@ -138,6 +157,21 @@ namespace Application.Services
                     return _response.SetNotFound(null, "Listing not found.");
                 }
                 var newListing = _mapper.Map(updatedListing, existingListing);
+                if (itemType == ItemType.Battery)
+                {
+                    newListing.BatteryId = newListing.BatteryId;
+                    newListing.VehicleId = null;
+                }
+                else if (itemType == ItemType.Vehicle)
+                {
+                    newListing.VehicleId = newListing.VehicleId;
+                    newListing.BatteryId = null;
+                }
+                else if (itemType == ItemType.FullSet)
+                {
+                    newListing.VehicleId = newListing.VehicleId;
+                    newListing.BatteryId = newListing.BatteryId;
+                }
                 newListing.UpdateTime = DateTime.UtcNow;
                 if (await _unitOfWork.SaveChangesAsync() > 0)
                 {

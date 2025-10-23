@@ -3,8 +3,10 @@ using Application.ViewModels.Requests;
 using Application.ViewModels.Responses;
 using Domain.Entities;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace EVCycleWeb.Controllers
 {
@@ -18,11 +20,16 @@ namespace EVCycleWeb.Controllers
             _listingService = listingService;
         }
 
-        [HttpGet("all/{userId}")]
-        public async Task<IActionResult> GetAllListings(Guid userId)
+        [Authorize]
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllListings()
         {
-            //var currentUser = HttpContext.User;
-            //var userId = currentUser.FindFirst("Id")?.Value;
+            var user = HttpContext.User;
+            if(user == null)
+            {
+                return Unauthorized();
+            }
+            var userId = Guid.Parse(user.FindFirst("UserId")?.Value);
             var result = await _listingService.GetAllListingsAsync(userId);
             if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
@@ -31,6 +38,7 @@ namespace EVCycleWeb.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
+        [Authorize]
         [HttpGet("GetByListingById")]
         public async Task<IActionResult> GetListingById([FromQuery] Guid listingId)
         {
@@ -42,17 +50,37 @@ namespace EVCycleWeb.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
+        [Authorize]
         [HttpPost("create")]
-        public async Task<IActionResult> CreateListing([FromBody] ListingRequest newListing, [FromQuery] ItemType itemType)
+        public async Task<IActionResult> CreateListing([FromBody] List<ListingRequest> newListing, [FromQuery] ItemType itemType)
         {
-            var result = await _listingService.CreateListingAsync(newListing, itemType);
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
+            var user = HttpContext.User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            var userId = Guid.Parse(user.FindFirst("UserId")?.Value);
+            List<ListingRequest> listing = new List<ListingRequest>();
+            foreach (var item in newListing)
+            {
+                var result = await _listingService.CreateListingAsync(item, itemType, userId);
+                if(result.IsSuccess == true)
+                {
+                    listing.Add(item);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            return Ok(listing);
         }
 
+        [Authorize]
         [HttpPut("update/{listingId}")]
-        public async Task<IActionResult> UpdateListing([FromBody] ListingRequest updatedListing, [FromRoute] Guid listingId)
+        public async Task<IActionResult> UpdateListing([FromBody] ListingRequest updatedListing, [FromRoute] Guid listingId, [FromRoute] ItemType itemType)
         {
-            var result = await _listingService.UpdateListingAsync(updatedListing, listingId);
+            var result = await _listingService.UpdateListingAsync(updatedListing, listingId, itemType);
             if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return NotFound(result);
@@ -60,6 +88,7 @@ namespace EVCycleWeb.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
+        [Authorize]
         [HttpDelete("delete/{listingId}")]
         public async Task<IActionResult> DeleteListing([FromRoute] Guid listingId)
         {
