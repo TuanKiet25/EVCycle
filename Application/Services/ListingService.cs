@@ -90,8 +90,8 @@ namespace Application.Services
                 var list = await _unitOfWork.listingRepository.GetAllAsync(
                     filter: l => l.UserId == UserId && l.isDeleted == false,
                     include: i => i
-                        .Include(l => l.Batteries)
-                        .Include(l => l.Vehicles)
+                        .Include(l => l.Battery)
+                        .Include(l => l.Vehicle)
                     );
                 List<ListingResponse> listingResponse = new List<ListingResponse>();
                 var listListings = _mapper.Map(list, listingResponse);
@@ -114,8 +114,8 @@ namespace Application.Services
                 var listing = await _unitOfWork.listingRepository.GetAsync(
                     filter: l => l.Id == listingId && l.isDeleted == false,
                     include: i => i
-                        .Include(l => l.Batteries)
-                        .Include(l => l.Vehicles)
+                        .Include(l => l.Battery)
+                        .Include(l => l.Vehicle)
                     );
                 if(listing == null) { 
                     return _response.SetNotFound(null, "Listing not found.");
