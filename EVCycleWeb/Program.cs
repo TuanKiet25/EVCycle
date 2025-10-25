@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using Application.Services;
+using Infrastructure;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddControllers();
+builder.Services.AddSingleton<PriceSuggestionService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
