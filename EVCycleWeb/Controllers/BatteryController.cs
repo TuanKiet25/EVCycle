@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using Application.ViewModels.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -15,6 +16,7 @@ namespace EVCycleWeb.Controllers
         {
             _batteryService = batteryService;
         }
+        
         [HttpGet("admin/all")]
         public async Task<IActionResult> AdminGetAllBatteries()
         {

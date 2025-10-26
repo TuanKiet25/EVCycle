@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.ViewModels.Requests
+namespace Application.ViewModels.Responses
 {
-    public class VehicleRequest
+    public class VehicleResponse
     {
+        public Guid Id { get; set; }
         public string? Brand { get; set; }
         public string? Model { get; set; }
         public int StartYear { get; set; }
@@ -17,6 +18,6 @@ namespace Application.ViewModels.Requests
         public string? Color { get; set; }
         public string? VIN { get; set; }
         public string? licensePlate { get; set; }
-        public List<Guid>? CompatibleBatteryIds { get; set; } = new List<Guid>();
+        public List<string>? BatteryModels { get; set; }
     }
 }

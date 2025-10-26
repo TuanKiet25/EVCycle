@@ -180,5 +180,10 @@ namespace Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public void RemoveRange(IEnumerable<T> entities)
+        {
+            _db.RemoveRange(entities);
+        }
     }
 }
