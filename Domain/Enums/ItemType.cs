@@ -9,6 +9,7 @@ namespace Domain.Enums
     public enum ItemType
     {
         Battery,
-        Vehicle
+        Vehicle,
+        FullSet
     }
 }

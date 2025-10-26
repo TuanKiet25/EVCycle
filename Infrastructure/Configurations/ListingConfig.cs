@@ -17,10 +17,12 @@ namespace Infrastructure.Configurations
             builder.HasOne(l => l.Vehicle)
                      .WithMany(v => v.Listings)
                      .HasForeignKey(l => l.VehicleId)
+                     .IsRequired(false)
                      .OnDelete(DeleteBehavior.SetNull);
             builder.HasOne(l => l.Battery)
                         .WithMany(b => b.Listings)
                         .HasForeignKey(l => l.BatteryId)
+                        .IsRequired(false)
                         .OnDelete(DeleteBehavior.SetNull);
         }
     }
