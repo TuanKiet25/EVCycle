@@ -36,6 +36,16 @@ namespace EVCycleWeb.Controllers
             }
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("AdminGetAll")]
+        public async Task<IActionResult> AdminGetAllVehicles()
+        {
+            var result = await _vehicleService.AdminGetAllVehiclesAsync();
+            if (result.StatusCode == HttpStatusCode.NotFound)
+            {
+                return NotFound(result);
+            }
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllVehicles()
         {
@@ -76,5 +86,6 @@ namespace EVCycleWeb.Controllers
             }
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+
     }
 }

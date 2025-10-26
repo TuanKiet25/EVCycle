@@ -11,6 +11,7 @@ namespace Application.IRepositories
     public interface IVehicleRepository : IGenericRepository<Vehicle>
     {
         Task<List<Vehicle>> GetAllVehiclesWithCompatibilitiesAsync();
+        Task<List<Vehicle>> AdminGetAllVehiclesWithCompatibilitiesAsync();
         Task<Vehicle> GetVehicleWithCompatibilitiesAsync(Guid vehicleId);
     }
 }
