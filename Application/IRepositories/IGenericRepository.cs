@@ -38,5 +38,6 @@ namespace Application.IRepositories
 
         Task<T> GetByIdAsync(Guid id);
         Task DeleteAsync(Guid id);
+        void RemoveRange(IEnumerable<T> entities);
     }
 }

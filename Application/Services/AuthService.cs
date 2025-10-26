@@ -29,7 +29,7 @@ namespace Application.Services
         public async Task<LoginResponseViewModel> LoginAsync(LoginRequestViewModel request)
         {
             var user = await _unitOfWork.userRepository.GetAsync(u => u.Username== request.Username);
-
+            //Isverified mặc định là false 
             if (user == null || user.IsActive || !user.IsVerified)
             {
                 throw new Exception("Incorrect user name or password!");
@@ -47,7 +47,7 @@ namespace Application.Services
 
         public async Task<string> RegisterAsync(RegisterRequestViewModel request)
         {
-            var existingUser = await _unitOfWork.userRepository.GetAsync(u => u.Username == request.Username || u.Email == request.Email);
+            var existingUser = await _unitOfWork.userRepository.GetAsync(u => u.Username == request.Username || u.Email == request.Email && !u.IsVerified);
             if (existingUser != null)
             {
                 throw new Exception("Username or Email already existed.");

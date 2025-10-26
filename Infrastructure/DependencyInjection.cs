@@ -38,6 +38,7 @@ namespace Infrastructure
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IBatteryRepository, BatteryRepository>();
             services.AddScoped<IListingRepository, ListingRepository>();
+            services.AddScoped<IBatteryCompatibilityRepository, BatteryCompatibilityRepository>();
             #endregion
             // Đăng ký services
             #region services

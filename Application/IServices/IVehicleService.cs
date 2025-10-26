@@ -12,8 +12,9 @@ namespace Application.IServices
     {
         Task<APIResponse> GetAllVehiclesAsync();
         Task<APIResponse> GetVehicleByIdAsync(Guid id);
-        Task<APIResponse> CreateVehicleAsync(VehicleRequest vehicleRequest, List<Guid> BatteryId);
+        Task<APIResponse> CreateVehicleAsync(List<VehicleRequest> vehicleRequests);
         Task<APIResponse> UpdateVehicleAsync(Guid id, VehicleRequest vehicleRequest);
         Task<APIResponse> DeleteVehicleAsync(Guid id);
+        Task<APIResponse> ApprovedVehicleAsync(Guid id);
     }
 }
