@@ -4,6 +4,7 @@ using Application.ViewModels.Responses;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,39 @@ namespace Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _response = new APIResponse();
+        }
+
+        public async Task<APIResponse> AdminGetAllVehiclesAsync()
+        {
+            try
+            {
+                var vehicles = await _unitOfWork.vehicleRepository.AdminGetAllVehiclesWithCompatibilitiesAsync();
+                var vehicleResponses = _mapper.Map<List<VehicleResponse>>(vehicles);
+                if (!vehicleResponses.Any())
+                {
+                    return _response.SetNotFound(null, "No vehicles found");
+                }
+                foreach (var vehicle in vehicleResponses)
+                {
+                    var originalVehicle = vehicles.First(v => v.Id == vehicle.Id);
+                    var compatibilities = originalVehicle.BatteryCompatibilities;
+                    if (compatibilities != null)
+                    {
+                        vehicle.BatteryModels = compatibilities
+                        .Select(bc => bc.Battery.Model)
+                        .ToList();
+                    }
+                    else
+                    {
+                        vehicle.BatteryModels = new List<string>();
+                    }
+                }
+                return _response.SetOk(vehicleResponses);
+            }
+            catch (Exception ex)
+            {
+                return _response.SetBadRequest(null, ex.Message);
+            }
         }
 
         public async Task<APIResponse> ApprovedVehicleAsync(Guid id)
@@ -177,8 +211,12 @@ namespace Application.Services
                 {
                     return _response.SetNotFound(null, "Vehicle not found");
                 }
-                //list pin mới, không có -> list null
-                var NewBatteriesId = vehicleRequest.CompatibleBatteryIds ?? new List<Guid>();
+                else if (!vehicle.IsAproved)
+                {
+                    return _response.SetBadRequest(null, "Approved vehicle cannot be updated");
+                }
+                    //list pin mới, không có -> list null
+                    var NewBatteriesId = vehicleRequest.CompatibleBatteryIds ?? new List<Guid>();
                 //Kiểm tra xe batteries này có hợp lệ không
                 if (NewBatteriesId.Any())
                 {

@@ -20,6 +20,16 @@ namespace Infrastructure.Repositories
             var vehicles = await _context.Vehicles
                 .Include(v => v.BatteryCompatibilities)        // Tải bảng trung gian BatteryCompatibilities
                 .ThenInclude(bc => bc.Battery)      // Tải chi tiết Entity Battery Standard
+                .Where(v => !v.isDeleted && !v.IsAproved)
+                .ToListAsync();
+            return vehicles;
+        }
+
+        public async Task<List<Vehicle>> AdminGetAllVehiclesWithCompatibilitiesAsync()
+        {
+            var vehicles = await _context.Vehicles
+                .Include(v => v.BatteryCompatibilities)        // Tải bảng trung gian BatteryCompatibilities
+                .ThenInclude(bc => bc.Battery)      // Tải chi tiết Entity Battery Standard
                 .Where(v => !v.isDeleted)
                 .ToListAsync();
             return vehicles;

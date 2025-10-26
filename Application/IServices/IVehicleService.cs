@@ -11,6 +11,7 @@ namespace Application.IServices
     public interface IVehicleService
     {
         Task<APIResponse> GetAllVehiclesAsync();
+        Task<APIResponse> AdminGetAllVehiclesAsync();
         Task<APIResponse> GetVehicleByIdAsync(Guid id);
         Task<APIResponse> CreateVehicleAsync(List<VehicleRequest> vehicleRequests);
         Task<APIResponse> UpdateVehicleAsync(Guid id, VehicleRequest vehicleRequest);
