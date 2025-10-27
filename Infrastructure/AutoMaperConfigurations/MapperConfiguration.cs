@@ -28,6 +28,8 @@ namespace Infrastructure.AutoMapperConfigurations
             CreateMap<Vehicle, VehicleResponse>().ReverseMap();
             CreateMap<ListingRequest, Listing>().ReverseMap();
             CreateMap<Listing, ListingResponse>().ReverseMap();
+            CreateMap<User, UserResponse>().ReverseMap();
+            CreateMap<UserRequest, User>().ReverseMap();
         }
     }
 }
