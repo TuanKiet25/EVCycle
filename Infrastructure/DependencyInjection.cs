@@ -48,6 +48,8 @@ namespace Infrastructure
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IBatteryService, BatteryService>();
             services.AddScoped<IListingService, ListingService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IClaimService, ClaimService>();
             #endregion
             // Đăng ký auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -90,6 +92,8 @@ namespace Infrastructure
                                             .AllowAnyMethod();
                                   });
             });
+            //đăng ký HttpContextAccessor
+            services.AddHttpContextAccessor();
             return services;
         }
     }
