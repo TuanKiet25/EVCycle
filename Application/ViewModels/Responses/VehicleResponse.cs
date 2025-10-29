@@ -18,6 +18,7 @@ namespace Application.ViewModels.Responses
         public string? Color { get; set; }
         public string? VIN { get; set; }
         public string? licensePlate { get; set; }
+        public int ListingCount { get; set; }
         public List<string>? BatteryModels { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -26,7 +27,12 @@ namespace Application.Services
             _mapper = mapper;
             _response = new APIResponse();
         }
-
+        private async Task<int> CountListingByVehicleIdAsync(Guid vehicleId)
+        {
+            var listing = await _unitOfWork.listingRepository.GetAllAsync(l => l.VehicleId == vehicleId);
+            var count = listing.Count;
+            return count;
+        }
         public async Task<APIResponse> AdminGetAllVehiclesAsync()
         {
             try
@@ -39,6 +45,7 @@ namespace Application.Services
                 }
                 foreach (var vehicle in vehicleResponses)
                 {
+                    vehicle.ListingCount = await CountListingByVehicleIdAsync(vehicle.Id);
                     var originalVehicle = vehicles.First(v => v.Id == vehicle.Id);
                     var compatibilities = originalVehicle.BatteryCompatibilities;
                     if (compatibilities != null)
@@ -162,6 +169,7 @@ namespace Application.Services
                 }
                 foreach (var vehicle in vehicleResponses)
                 {
+                    vehicle.ListingCount = await CountListingByVehicleIdAsync(vehicle.Id);
                     var originalVehicle = vehicles.First(v => v.Id == vehicle.Id);
                     var compatibilities = originalVehicle.BatteryCompatibilities;
                     if (compatibilities != null)
@@ -191,6 +199,7 @@ namespace Application.Services
                     return _response.SetNotFound(null, "Vehicle not found");
                 }
                 var vehicleResponse = _mapper.Map<VehicleResponse>(vehicle);
+                vehicleResponse.ListingCount = await CountListingByVehicleIdAsync(vehicle.Id);
                 vehicleResponse.BatteryModels = vehicle.BatteryCompatibilities
                     .Select(bc => bc.Battery.Model)
                     .ToList() ?? new List<string>();
