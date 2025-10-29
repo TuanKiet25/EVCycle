@@ -1,4 +1,5 @@
-﻿using Application.ViewModels.Responses;
+﻿using Application.ViewModels.Requests;
+using Application.ViewModels.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,9 @@ namespace Application.IServices
     {
         Task<APIResponse> GetAllUserAsync();
         Task<APIResponse> GetUserAsync();
-        Task<APIResponse> UpdateUserAsync(Guid id);
+        Task<APIResponse> UpdateUserAsync(UserRequest userRequest);
+        Task<APIResponse> SentOtpUpdateEmailAsync(UpdateEmailRequest updateEmailRequest);
+        Task<APIResponse> VerifyNewEmailAsync(VerifyOtpRequest verifyOtpRequest);
+
     }
 }

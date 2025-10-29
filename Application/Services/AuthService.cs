@@ -72,10 +72,10 @@ namespace Application.Services
             await _unitOfWork.SaveChangesAsync();
 
             // 5. Gửi email chứa OTP
-            var emailBody = $"Mã xác thực của bạn là: {otp}. Mã này sẽ hết hạn sau 5 phút.";
-            await _emailService.SendEmailAsync(user.Email, "Xác nhận đăng ký tài khoản", emailBody);
+            var emailBody = $"Your verification code is: {otp}. This code will expire in 5 minutes.";
+            await _emailService.SendEmailAsync(user.Email, "Account Registration Confirmation", emailBody);
 
-            return "Đăng ký khởi tạo thành công. Vui lòng kiểm tra email để lấy mã OTP.";
+            return "Registration initiated successfully. Please check your email for the OTP code.";
         }
 
         public async Task<string> VerifyOtpAsync(VerifyOtpRequest request)
