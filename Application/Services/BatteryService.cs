@@ -21,7 +21,11 @@ namespace Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        private async Task<int> CountListingByBatteryIdAsync(Guid batteryId)
+        {
+            var listing = await _unitOfWork.listingRepository.GetAllAsync(l => l.BatteryId == batteryId);
+            return listing.Count;
+        }
         public async Task<APIResponse> AdminGetAllBatteriesAsync()
         {
             APIResponse response = new APIResponse();
@@ -32,6 +36,10 @@ namespace Application.Services
                 if (!batteryResponses.Any())
                 {
                     return response.SetNotFound(null, "No batteries found");
+                }
+                foreach (var batteryResponse in batteryResponses)
+                {
+                    batteryResponse.ListingCount = await CountListingByBatteryIdAsync(batteryResponse.Id);
                 }
                 return response.SetOk(batteryResponses);
             }
@@ -120,6 +128,11 @@ namespace Application.Services
                 {
                     return response.SetNotFound(null, "No batteries found");
                 }
+                foreach( var batteryResponse in batteryResponses)
+                {
+                    var listingCount = await CountListingByBatteryIdAsync(batteryResponse.Id);
+                    batteryResponse.ListingCount = listingCount;
+                }
                 return response.SetOk(batteryResponses);
             }
             catch (Exception ex)
@@ -139,6 +152,8 @@ namespace Application.Services
                     return response.SetNotFound(null, "Battery not found");
                 }
                 var batteryResponse = _mapper.Map<BatteryResponse>(battery);
+                var listingCount = await CountListingByBatteryIdAsync(batteryResponse.Id);
+                batteryResponse.ListingCount = listingCount;
                 return response.SetOk(batteryResponse);
             }
             catch (Exception ex)
