@@ -30,6 +30,7 @@ namespace Infrastructure.AutoMapperConfigurations
             CreateMap<Listing, ListingResponse>().ReverseMap();
             CreateMap<User, UserResponse>().ReverseMap();
             CreateMap<UserRequest, User>().ReverseMap();
+            CreateMap<UpdateEmailRequest, User>().ReverseMap();
         }
     }
 }
