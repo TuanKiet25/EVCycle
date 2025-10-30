@@ -29,7 +29,7 @@ namespace Application.Services
         }
         private async Task<int> CountListingByVehicleIdAsync(Guid vehicleId)
         {
-            var listing = await _unitOfWork.listingRepository.GetAllAsync(l => l.VehicleId == vehicleId);
+            var listing = await _unitOfWork.listingVehicleRepository.GetAllAsync(l => l.VehicleId == vehicleId);
             var count = listing.Count;
             return count;
         }
