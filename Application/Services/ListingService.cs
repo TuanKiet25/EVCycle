@@ -36,7 +36,29 @@ namespace Application.Services
                 {
                     return _response.SetBadRequest(null, "Listing data is null.");
                 }
+                if(newListing.ListingVehicles == null && newListing.ListingBatteries == null)
+                {
+                    return _response.SetBadRequest(null, "some Listing data is null");
+                }
+                if (itemType == ItemType.Battery && newListing.ListingBatteries != null)
+                {
+                    newListing.ListingVehicles = null;
+                }
+                else if (itemType == ItemType.Vehicle && newListing.ListingVehicles != null)
+                {
+                    newListing.ListingBatteries = null;
+                }
+                else if (itemType == ItemType.FullSet && newListing.ListingBatteries != null && newListing.ListingVehicles != null)
+                {
+
+                }
+                else
+                {
+                    return _response.SetBadRequest(null, "some Listing data is null");
+                }
+
                 var listing = _mapper.Map<Listing>(newListing);
+                
                 listing.UserId = userId;
                 listing.ItemType = itemType;
                 await _unitOfWork.listingRepository.AddAsync(listing);
@@ -115,13 +137,15 @@ namespace Application.Services
         {
             try
             {
-                var listing = await _unitOfWork.listingRepository.GetAsync(
+                var rawListing = await _unitOfWork.listingRepository.GetAsync(
                     filter: l => l.Id == listingId && l.isDeleted == false,
                     include: i => i
                         .Include(l => l.ListingBatteries)
                         .Include(l => l.ListingVehicles)
                     );
-                if(listing == null) { 
+                ListingResponse listingResponse = new ListingResponse();
+                var listing = _mapper.Map(rawListing, listingResponse);
+                if (listing == null) { 
                     return _response.SetNotFound(null, "Listing not found.");
                 }
                 return _response.SetOk(listing);
@@ -136,16 +160,47 @@ namespace Application.Services
         {
             try
             {
-                var existingListing = await _unitOfWork.listingRepository.GetAsync(l => l.Id == listingId && l.isDeleted == false);
+                var existingListing = await _unitOfWork.listingRepository.GetAsync(
+                    l => l.Id == listingId && !l.isDeleted,
+                    include: q => q.Include(l => l.ListingBatteries)
+                                   .Include(l => l.ListingVehicles)
+                );
                 if (existingListing == null)
                 {
                     return _response.SetNotFound(null, "Listing not found.");
                 }
-                var newListing = _mapper.Map(updatedListing, existingListing);
-                newListing.UpdateTime = DateTime.UtcNow;
+
+                if (itemType == ItemType.Battery && updatedListing.ListingBatteries != null)
+                {
+                    existingListing.ItemType = ItemType.Battery;
+                    if(existingListing.ListingVehicles != null)
+                        existingListing.ListingVehicles.Clear();
+                    updatedListing.ListingVehicles = null;
+                }
+                else if (itemType == ItemType.Vehicle && updatedListing.ListingVehicles != null)
+                {
+                    existingListing.ItemType = ItemType.Vehicle;
+                    if (existingListing.ListingBatteries != null)
+                        existingListing.ListingBatteries.Clear();
+                    updatedListing.ListingBatteries = null;
+                }
+                else if (itemType == ItemType.FullSet && updatedListing.ListingBatteries != null && updatedListing.ListingVehicles != null)
+                {
+                    existingListing.ItemType = ItemType.FullSet;
+                }
+                else
+                {
+                    return _response.SetBadRequest(null, "some Listing data is null");
+                }
+
+                _mapper.Map(updatedListing, existingListing);
+
+                existingListing.ListingBatteries?.ToList().ForEach(b => b.Id = Guid.NewGuid());
+                existingListing.UpdateTime = DateTime.UtcNow;
+
                 if (await _unitOfWork.SaveChangesAsync() > 0)
                 {
-                    return _response.SetOk(newListing);
+                    return _response.SetOk(existingListing);
                 }
                 else
                 {

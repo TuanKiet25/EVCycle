@@ -31,6 +31,10 @@ namespace Infrastructure.AutoMapperConfigurations
             CreateMap<User, UserResponse>().ReverseMap();
             CreateMap<UserRequest, User>().ReverseMap();
             CreateMap<UpdateEmailRequest, User>().ReverseMap();
+            CreateMap<ListingBatteryRequest, ListingBattery>().ReverseMap();
+            CreateMap<ListingVehicleRequest, ListingVehicle>().ReverseMap();
+            CreateMap<ListingBattery, ListingBatteryResponse>().ReverseMap();
+            CreateMap<ListingVehicle, ListingVehicleResponse>().ReverseMap();
         }
     }
 }
