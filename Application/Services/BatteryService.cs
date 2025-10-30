@@ -23,8 +23,8 @@ namespace Application.Services
         }
         private async Task<int> CountListingByBatteryIdAsync(Guid batteryId)
         {
-            var listing = await _unitOfWork.listingRepository.GetAllAsync(l => l.BatteryId == batteryId);
-            return listing.Count;
+            var listingBattery = await _unitOfWork.listingBatteryRepository.GetAllAsync(l => l.BatteryId == batteryId);
+            return listingBattery.Count;
         }
         public async Task<APIResponse> AdminGetAllBatteriesAsync()
         {
