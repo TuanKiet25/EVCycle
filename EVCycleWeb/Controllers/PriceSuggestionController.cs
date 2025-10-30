@@ -13,15 +13,28 @@ namespace EVCycleWeb.Controllers
             _service = service;
         }
 
-        [HttpPost("Price_Suggestion")]
-        public async Task<IActionResult> SuggestPrice([FromBody] VehicleRequest request)
+        [HttpPost("Vehicle_Price_Suggestion")]
+        public async Task<IActionResult> VehicleSuggestPrice([FromBody] VehicleSuggestionRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var suggestion = await _service.SuggestPriceAsync(request);
+            var suggestion = await _service.VehicleSuggestPriceAsync(request);
+
+            return Ok(suggestion); // Trả về JSON từ OpenAI
+        }
+
+        [HttpPost("Battery_Price_Suggestion")]
+        public async Task<IActionResult> BatterySuggestPrice([FromBody] BatteryRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var suggestion = await _service.BatterySuggestPriceAsync(request);
 
             return Ok(suggestion); // Trả về JSON từ OpenAI
         }
