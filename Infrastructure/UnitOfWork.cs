@@ -17,6 +17,8 @@ namespace Infrastructure
         public IVehicleRepository vehicleRepository { get; }
         public IListingRepository listingRepository { get; }
         public IBatteryCompatibilityRepository batteryCompatibilityRepository { get; }
+        public IListingBatteryRepository listingBatteryRepository { get; }
+        public IListingVehicleRepository listingVehicleRepository { get; }
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
@@ -25,6 +27,8 @@ namespace Infrastructure
             vehicleRepository = new VehicleRepository(_context);
             listingRepository = new ListingRepository(_context);
             batteryCompatibilityRepository = new BatteryCompatibilityRepository(_context);
+            listingBatteryRepository = new ListingBatteryRepository(_context);
+            listingVehicleRepository = new ListingVehicleRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

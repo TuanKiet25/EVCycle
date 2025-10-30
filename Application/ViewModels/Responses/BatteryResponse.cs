@@ -12,7 +12,6 @@ namespace Application.ViewModels.Responses
         public string? Brand { get; set; }
         public string? Model { get; set; }
         public double Capacity { get; set; }
-        public int Health { get; set; }
         public string? Voltage { get; set; }
         public int ListingCount { get; set; }
     }

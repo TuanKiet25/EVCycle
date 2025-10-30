@@ -14,6 +14,8 @@ namespace Application
         IVehicleRepository vehicleRepository { get; }
         IListingRepository listingRepository { get; }
         IBatteryCompatibilityRepository batteryCompatibilityRepository { get; }
+        IListingBatteryRepository listingBatteryRepository { get; }
+        IListingVehicleRepository listingVehicleRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }
