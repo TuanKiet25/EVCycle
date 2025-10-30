@@ -37,21 +37,6 @@ namespace Application.Services
                     return _response.SetBadRequest(null, "Listing data is null.");
                 }
                 var listing = _mapper.Map<Listing>(newListing);
-                if(itemType == ItemType.Battery)
-                {
-                    listing.BatteryId = newListing.BatteryId;
-                    listing.VehicleId = null;
-                }
-                else if(itemType == ItemType.Vehicle)
-                {
-                    listing.VehicleId = newListing.VehicleId;
-                    listing.BatteryId = null;
-                }
-                else if(itemType == ItemType.FullSet)
-                {
-                    listing.VehicleId = newListing.VehicleId;
-                    listing.BatteryId = newListing.BatteryId;
-                }
                 listing.UserId = userId;
                 listing.ItemType = itemType;
                 await _unitOfWork.listingRepository.AddAsync(listing);
@@ -108,8 +93,8 @@ namespace Application.Services
                 var rawList = await _unitOfWork.listingRepository.GetAllAsync(
                     filter: l => l.UserId == UserId && l.isDeleted == false,
                     include: i => i
-                        .Include(l => l.Battery)
-                        .Include(l => l.Vehicle)
+                        .Include(l => l.ListingBatteries)
+                        .Include(l => l.ListingVehicles)
                     );
                 var list = rawList.OrderByDescending(l => l.UpdateTime).ToList();
                 List<ListingResponse> listingResponse = new List<ListingResponse>();
@@ -133,8 +118,8 @@ namespace Application.Services
                 var listing = await _unitOfWork.listingRepository.GetAsync(
                     filter: l => l.Id == listingId && l.isDeleted == false,
                     include: i => i
-                        .Include(l => l.Battery)
-                        .Include(l => l.Vehicle)
+                        .Include(l => l.ListingBatteries)
+                        .Include(l => l.ListingVehicles)
                     );
                 if(listing == null) { 
                     return _response.SetNotFound(null, "Listing not found.");
@@ -157,21 +142,6 @@ namespace Application.Services
                     return _response.SetNotFound(null, "Listing not found.");
                 }
                 var newListing = _mapper.Map(updatedListing, existingListing);
-                if (itemType == ItemType.Battery)
-                {
-                    newListing.BatteryId = newListing.BatteryId;
-                    newListing.VehicleId = null;
-                }
-                else if (itemType == ItemType.Vehicle)
-                {
-                    newListing.VehicleId = newListing.VehicleId;
-                    newListing.BatteryId = null;
-                }
-                else if (itemType == ItemType.FullSet)
-                {
-                    newListing.VehicleId = newListing.VehicleId;
-                    newListing.BatteryId = newListing.BatteryId;
-                }
                 newListing.UpdateTime = DateTime.UtcNow;
                 if (await _unitOfWork.SaveChangesAsync() > 0)
                 {

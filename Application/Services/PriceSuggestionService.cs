@@ -88,7 +88,6 @@ Dữ liệu pin:
 - Thương hiệu: {battery.Brand ?? "Không rõ"}
 - Mẫu pin: {battery.Model ?? "Không rõ"}
 - Dung lượng: {battery.Capacity} kWh
-- Sức khỏe pin: {battery.Health}%
 - Điện áp: {battery.Voltage ?? "Không rõ"}";
 
             var requestBody = new
