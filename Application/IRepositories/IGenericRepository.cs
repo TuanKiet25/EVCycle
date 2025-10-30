@@ -22,6 +22,8 @@ namespace Application.IRepositories
 
         Task AddRangeAsync(List<T> entities);
 
+        Task AddRangeAsync(ICollection<T> entities);
+
         Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter);
 
         Task<T> GetAsync(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include);

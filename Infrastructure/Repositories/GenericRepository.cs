@@ -123,6 +123,11 @@ namespace Infrastructure.Repositories
             await _db.AddRangeAsync(entities);
         }
 
+        public async Task AddRangeAsync(ICollection<T> entities)
+        {
+            await _db.AddRangeAsync(entities);
+        }
+
         public async Task UpdateAsync(T entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -138,14 +143,9 @@ namespace Infrastructure.Repositories
             var entityList = entities.ToList();
             if (!entityList.Any()) return;
 
-            // (Optional) Verify that all entities are currently tracked or exist in the database:
-            // var keys = entityList.Select(e => EF.Property<object>(e, "Id")).ToList();
-            // var existingCount = await _db.Where(e => keys.Contains(EF.Property<object>(e, "Id"))).CountAsync();
-            // if (existingCount != entityList.Count)
-            //     throw new InvalidOperationException("One or more entities were not found in the database.");
-
             _db.RemoveRange(entityList);
-            await _context.SaveChangesAsync();
+            // await _context.SaveChangesAsync(); // <-- XÓA DÒNG NÀY
+            await Task.CompletedTask; // (Hoặc làm cho hàm này đồng bộ)
         }
 
 

@@ -32,28 +32,21 @@ namespace Application.Services
         public async Task<string> VehicleSuggestPriceAsync(VehicleSuggestionRequest vehicle)
         {
             string prompt = $@"
-Bạn là kỹ sư chuyên đánh giá xe điện. 
-Hãy ước lượng *giá trị tham khảo trên thị trường Việt Nam* (đơn vị: VND) dựa trên các thông tin kỹ thuật bên dưới.  
-Không đưa ra lời khuyên tài chính hay thương mại, chỉ cung cấp một con số ước lượng kỹ thuật để tham khảo.
+Từ '[Vehicle Data]', gợi ý cho tôi giá bán 2nd hand của chiếc xe. Chỉ trả lời bằng 1 con số (ví dụ: 1500000000VND), không giải thích gì thêm. 
 
-Chỉ trả lời bằng JSON hợp lệ với khóa 'gia_tri_tham_khao'.
-
-Ví dụ:
-{{ ""gia_tri_tham_khao"": 120000000 }}
-
-Dữ liệu xe:
-- Thương hiệu: {vehicle.Brand ?? "Không rõ"}
-- Mẫu xe: {vehicle.Model ?? "Không rõ"}
-- Năm sản xuất: {vehicle.StartYear} - {vehicle.EndYear}
-- Odometer (km đã chạy): {vehicle.Odometer} km
-- Sức khỏe pin: {vehicle.BatteryHealth}%
-- Màu sắc: {vehicle.Color ?? "Không rõ"}";
+[Vehicle Data]
+- Brand: {vehicle.Brand ?? "Unknown"}
+- Model: {vehicle.Model ?? "Unknown"}
+- Production Year: {vehicle.StartYear} - {vehicle.EndYear}
+- Odometer: {vehicle.Odometer} km
+- Battery Health: {vehicle.BatteryHealth}%
+- Color: {vehicle.Color ?? "Unknown"}";
 
             var requestBody = new
             {
-                model = "meta-llama/llama-3.1-8b-instruct", // 🧠 Model miễn phí & ổn định
+                model = "minimax/minimax-m2:free", // 🧠 Model miễn phí & ổn định
                 messages = new[] { new { role = "user", content = prompt } },
-                max_tokens = 300
+                max_tokens = 2000
             };
 
             var content = new StringContent(
@@ -77,12 +70,7 @@ Dữ liệu xe:
         {
             string prompt = $@"
 Bạn là kỹ sư chuyên đánh giá pin xe điện. 
-Hãy cho tôi một con số tham khảo với đơn bị đồng. nếu không thể hỗ trợ hãy cho tôi biết lý do.
-
-Chỉ trả lời bằng JSON hợp lệ với khóa 'gia_tri_tham_khao'.
-
-Ví dụ:
-{{ ""gia_tri_tham_khao"": 120000000 đồng}}
+gợi ý cho tôi giá bán 2nd hand của pin xe điện này. Chỉ trả lời bằng 1 con số (ví dụ: 1500000000VND), không giải thích gì thêm.
 
 Dữ liệu pin:
 - Thương hiệu: {battery.Brand ?? "Không rõ"}
@@ -92,9 +80,9 @@ Dữ liệu pin:
 
             var requestBody = new
             {
-                model = "meta-llama/llama-3.1-8b-instruct", // 🧠 Model miễn phí & ổn định
+                model = "minimax/minimax-m2:free", // 🧠 Model miễn phí & ổn định
                 messages = new[] { new { role = "user", content = prompt } },
-                max_tokens = 300
+                max_tokens = 2000
             };
 
             var content = new StringContent(
