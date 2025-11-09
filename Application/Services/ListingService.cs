@@ -161,7 +161,7 @@ namespace Application.Services
             try
             {
                 var existingListing = await _unitOfWork.listingRepository.GetAsync(
-                    l => l.Id == listingId && !l.isDeleted,
+                    filter: l => l.Id == listingId && l.isDeleted == false,
                     include: q => q.Include(l => l.ListingBatteries)
                                    .Include(l => l.ListingVehicles)
                 );
@@ -170,33 +170,53 @@ namespace Application.Services
                     return _response.SetNotFound(null, "Listing not found.");
                 }
 
+                //map cac thuoc tinh tu updatedListing sang existingListing tru cac collection
+                _mapper.Map(updatedListing, existingListing);
+                existingListing.ItemType = itemType;
+                existingListing.UpdateTime = DateTime.UtcNow;
+
+                //Xóa tất cả các collection con cũ
+                if (existingListing.ListingBatteries != null)
+                {
+                    await _unitOfWork.listingBatteryRepository.RemoveRangeAsync(existingListing.ListingBatteries);
+                }
+                if (existingListing.ListingVehicles != null)
+                {
+                    await _unitOfWork.listingVehicleRepository.RemoveRangeAsync(existingListing.ListingVehicles);
+                }
+
                 if (itemType == ItemType.Battery && updatedListing.ListingBatteries != null)
                 {
-                    existingListing.ItemType = ItemType.Battery;
-                    if(existingListing.ListingVehicles != null)
-                        existingListing.ListingVehicles.Clear();
-                    updatedListing.ListingVehicles = null;
+                    var newBatteries = _mapper.Map<ICollection<ListingBattery>>(updatedListing.ListingBatteries);
+                    foreach (var item in newBatteries) { 
+                        item.ListingId = existingListing.Id; 
+                    }
+                    await _unitOfWork.listingBatteryRepository.AddRangeAsync(newBatteries);
                 }
                 else if (itemType == ItemType.Vehicle && updatedListing.ListingVehicles != null)
                 {
-                    existingListing.ItemType = ItemType.Vehicle;
-                    if (existingListing.ListingBatteries != null)
-                        existingListing.ListingBatteries.Clear();
-                    updatedListing.ListingBatteries = null;
+                    var newVehicles = _mapper.Map<ICollection<ListingVehicle>>(updatedListing.ListingVehicles);
+                    foreach (var item in newVehicles) { item.ListingId = existingListing.Id; }
+                    await _unitOfWork.listingVehicleRepository.AddRangeAsync(newVehicles);
                 }
                 else if (itemType == ItemType.FullSet && updatedListing.ListingBatteries != null && updatedListing.ListingVehicles != null)
                 {
-                    existingListing.ItemType = ItemType.FullSet;
+                    var newBatteries = _mapper.Map<ICollection<ListingBattery>>(updatedListing.ListingBatteries);
+                    foreach (var item in newBatteries) { 
+                        item.ListingId = existingListing.Id; 
+                    }
+                    await _unitOfWork.listingBatteryRepository.AddRangeAsync(newBatteries);
+
+                    var newVehicles = _mapper.Map<ICollection<ListingVehicle>>(updatedListing.ListingVehicles);
+                    foreach (var item in newVehicles) { 
+                        item.ListingId = existingListing.Id; 
+                    }
+                    await _unitOfWork.listingVehicleRepository.AddRangeAsync(newVehicles);
                 }
                 else
                 {
                     return _response.SetBadRequest(null, "some Listing data is null");
                 }
-
-                _mapper.Map(updatedListing, existingListing);
-
-                existingListing.ListingBatteries?.ToList().ForEach(b => b.Id = Guid.NewGuid());
-                existingListing.UpdateTime = DateTime.UtcNow;
 
                 if (await _unitOfWork.SaveChangesAsync() > 0)
                 {
