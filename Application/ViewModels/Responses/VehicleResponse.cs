@@ -14,6 +14,7 @@ namespace Application.ViewModels.Responses
         public int StartYear { get; set; }
         public int EndYear { get; set; }
         public int ListingCount { get; set; }
+        public bool IsAproved { get; set; }
         public List<string>? BatteryModels { get; set; }
     }
 }

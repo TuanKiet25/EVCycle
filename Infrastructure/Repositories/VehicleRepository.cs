@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
             var vehicles = await _context.Vehicles
                 .Include(v => v.BatteryCompatibilities)        // Tải bảng trung gian BatteryCompatibilities
                 .ThenInclude(bc => bc.Battery)      // Tải chi tiết Entity Battery Standard
-                .Where(v => !v.isDeleted && !v.IsAproved)
+                .Where(v => !v.isDeleted && v.IsAproved == true)
                 .ToListAsync();
             return vehicles;
         }
