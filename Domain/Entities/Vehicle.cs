@@ -13,6 +13,7 @@ namespace Domain.Entities
         public int StartYear { get; set; }
         public int EndYear { get; set; }
         public bool IsAproved { get; set; } = false;
+        public string? imgs { get; set; }
         public ICollection<ListingVehicle>? ListingVehicles { get; set; }
         public ICollection<BatteryCompatibility>? BatteryCompatibilities { get; set; }
     }
