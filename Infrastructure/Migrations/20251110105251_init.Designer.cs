@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251030074106_init")]
+    [Migration("20251110105251_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -311,6 +311,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("imgs")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");

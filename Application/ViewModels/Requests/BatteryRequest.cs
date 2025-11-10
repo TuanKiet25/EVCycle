@@ -12,5 +12,6 @@ namespace Application.ViewModels.Requests
         public string? Model { get; set; }
         public double Capacity { get; set; }
         public string? Voltage { get; set; }
+        public string? imgs { get; set; }
     }
 }
