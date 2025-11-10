@@ -15,5 +15,6 @@ namespace Application.ViewModels.Responses
         public string? Voltage { get; set; }
         public int ListingCount { get; set; }
         public bool IsAproved { get; set; }
+        public string? imgs { get; set; }
     }
 }

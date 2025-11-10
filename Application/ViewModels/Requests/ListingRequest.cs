@@ -13,7 +13,6 @@ namespace Application.ViewModels.Requests
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Address { get; set; }
-        public Guid UserId { get; set; }
         public ICollection<ListingBatteryRequest>? ListingBatteries { get; set; }
         public ICollection<ListingVehicleRequest>? ListingVehicles { get; set; }
     }
