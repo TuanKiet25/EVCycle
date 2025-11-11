@@ -55,6 +55,7 @@ namespace Application.Services
                     return _apiResponse.SetNotFound(message: "User not found.");
                 }
                 var userResponse = _mapper.Map<UserResponse>(user);
+                userResponse.Id = claim.UserId;
                 return _apiResponse.SetOk(userResponse);
             }
             catch(Exception ex)
