@@ -21,8 +21,8 @@ namespace EVCycleWeb.Controllers
         }
 
         [Authorize]
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllListings()
+        [HttpGet("UserAll")]
+        public async Task<IActionResult> GetAllUserListings()
         {
             var user = HttpContext.User;
             if(user == null)
@@ -30,7 +30,18 @@ namespace EVCycleWeb.Controllers
                 return Unauthorized();
             }
             var userId = Guid.Parse(user.FindFirst("UserId")?.Value);
-            var result = await _listingService.GetAllListingsAsync(userId);
+            var result = await _listingService.GetAllUserListingsAsync(userId);
+            if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return NotFound(result);
+            }
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAllListings()
+        {
+            var result = await _listingService.GetAllListingsAsync();
             if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return NotFound(result);
