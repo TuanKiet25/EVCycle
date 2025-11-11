@@ -103,7 +103,32 @@ namespace Application.Services
             }
         }
 
-        public async Task<APIResponse> GetAllListingsAsync(Guid UserId)
+        public async Task<APIResponse> GetAllListingsAsync()
+        {
+            try
+            {
+                var rawList = await _unitOfWork.listingRepository.GetAllAsync(l => !l.isDeleted,
+                    include: i => i
+                        .Include(l => l.ListingBatteries)
+                        .Include(l => l.ListingVehicles)
+                    );
+                var list = rawList.OrderByDescending(l => l.UpdateTime).ToList();
+                List<ListingResponse> listingResponse = new List<ListingResponse>();
+                var listListings = _mapper.Map(list, listingResponse); 
+                if (listListings == null || !listListings.Any())
+                {
+                    return _response.SetNotFound(null, "No listings found for the user.");
+                }
+                return _response.SetOk(listListings);
+            }
+            catch (Exception ex)
+            {
+                return _response.SetBadRequest(null, ex.Message);
+
+            }
+        }
+
+        public async Task<APIResponse> GetAllUserListingsAsync(Guid UserId)
         {
             try
             {
